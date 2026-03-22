@@ -5,6 +5,19 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>CBA CS — Word Search</title>
 <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Share+Tech+Mono&family=Exo+2:wght@300;400;600&display=swap" rel="stylesheet" media="print" onload="this.media='all'">
+<!-- OpenDyslexic via CDN -->
+<style>
+  @font-face {
+    font-family: 'OpenDyslexic';
+    src: url('https://cdn.jsdelivr.net/npm/opendyslexic@1.0.3/fonts/OpenDyslexic-Regular.otf') format('opentype');
+    font-weight: normal;
+  }
+  @font-face {
+    font-family: 'OpenDyslexic';
+    src: url('https://cdn.jsdelivr.net/npm/opendyslexic@1.0.3/fonts/OpenDyslexic-Bold.otf') format('opentype');
+    font-weight: bold;
+  }
+</style>
 <style>
   :root {
     --bg:#07090f; --surface:#0f1623; --surface2:#161e2e; --border:#1a2d4a;
@@ -31,6 +44,37 @@
   body.light .ws-cell.fc3 { color:#000; }
   body.light .ws-cell.fc4 { color:#fff; }
   body.light .ws-cell.fc5 { color:#fff; }
+
+  /* ── DYSLEXIA MODE ── */
+  body.dyslexia .ws-cell,
+  body.dyslexia .word-item,
+  body.dyslexia .hint-panel,
+  body.dyslexia #hint-text,
+  body.dyslexia .lb-entry,
+  body.dyslexia .words-title,
+  body.dyslexia .lb-title,
+  body.dyslexia .dir-legend,
+  body.dyslexia .grid-status,
+  body.dyslexia .stat-l,
+  body.dyslexia .diff-btn,
+  body.dyslexia .toggle-btn,
+  body.dyslexia .win-input,
+  body.dyslexia .win-time,
+  body.dyslexia .play-again {
+    font-family: 'OpenDyslexic', 'Comic Sans MS', cursive !important;
+  }
+  /* Larger letter spacing and line height in dyslexia mode */
+  body.dyslexia .word-item { letter-spacing:.08em; line-height:1.9; }
+  body.dyslexia #hint-text { letter-spacing:.04em; line-height:1.9; font-size:.78rem; }
+  body.dyslexia .ws-cell   { font-size:.8rem; letter-spacing:.02em; }
+  body.dyslexia .lb-entry  { letter-spacing:.04em; line-height:1.8; }
+  /* Cream background option in dyslexia mode — easier on eyes */
+  body.dyslexia.light {
+    --bg:#fdf6e3; --surface:#fffef7; --surface2:#f5edd6; --border:#d4b896;
+  }
+  .toggle-btn.active-dyslexia {
+    border-color:#f0a500; color:#f0a500; background:rgba(240,165,0,.12);
+  }
 
   /* ── COLOUR FILTERS ── */
   .filter-overlay {
@@ -334,10 +378,11 @@
       <button class="diff-btn" onclick="setDifficulty('medium')">MEDIUM</button>
       <button class="diff-btn" onclick="setDifficulty('hard')">HARD</button>
     </div>
-    <div style="display:flex;gap:.3rem;">
-      <button class="toggle-btn" id="btn-light" onclick="toggleLight()">☀ LIGHT</button>
-      <button class="toggle-btn" id="btn-blue"  onclick="toggleFilter('blue')">🔵 BLUE</button>
-      <button class="toggle-btn" id="btn-green" onclick="toggleFilter('green')">🟢 GREEN</button>
+    <div style="display:flex;gap:.3rem;flex-wrap:wrap;">
+      <button class="toggle-btn" id="btn-light"    onclick="toggleLight()">☀ LIGHT</button>
+      <button class="toggle-btn" id="btn-blue"     onclick="toggleFilter('blue')">🔵 BLUE</button>
+      <button class="toggle-btn" id="btn-green"    onclick="toggleFilter('green')">🟢 GREEN</button>
+      <button class="toggle-btn" id="btn-dyslexia" onclick="toggleDyslexia()" title="Switch to OpenDyslexic font">𝐀 DYSLEXIC</button>
     </div>
     <button class="new-btn" onclick="newGame()">⟳ NEW GAME</button>
   </div>
@@ -414,10 +459,15 @@ const store = {
 let currentFilter = store.get('ws_filter') || 'none';
 let isLight       = store.get('ws_light')  === '1';
 
+let isDyslexia = store.get('ws_dyslexia') === '1';
+
 function applyAll() {
   document.body.classList.toggle('light', isLight);
+  document.body.classList.toggle('dyslexia', isDyslexia);
   const lb = document.getElementById('btn-light');
+  const db = document.getElementById('btn-dyslexia');
   if(lb) lb.classList.toggle('active-light', isLight);
+  if(db) db.classList.toggle('active-dyslexia', isDyslexia);
   document.body.classList.remove('filter-blue','filter-green');
   const bb = document.getElementById('btn-blue');
   const gb = document.getElementById('btn-green');
@@ -434,6 +484,11 @@ function toggleLight() {
 function toggleFilter(f) {
   currentFilter = currentFilter === f ? 'none' : f;
   store.set('ws_filter', currentFilter);
+  applyAll();
+}
+function toggleDyslexia() {
+  isDyslexia = !isDyslexia;
+  store.set('ws_dyslexia', isDyslexia ? '1' : '0');
   applyAll();
 }
 applyAll();
