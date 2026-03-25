@@ -72,7 +72,7 @@
   body.dyslexia.light {
     --bg:#fdf6e3; --surface:#fffef7; --surface2:#f5edd6; --border:#d4b896;
   }
-  .toggle-btn.active-dyslexia {
+  .toggle-btn.active-super {
     border-color:#f0a500; color:#f0a500; background:rgba(240,165,0,.12);
   }
 
@@ -382,7 +382,7 @@
       <button class="toggle-btn" id="btn-light"    onclick="toggleLight()">☀ LIGHT</button>
       <button class="toggle-btn" id="btn-blue"     onclick="toggleFilter('blue')">🔵 BLUE</button>
       <button class="toggle-btn" id="btn-green"    onclick="toggleFilter('green')">🟢 GREEN</button>
-      <button class="toggle-btn" id="btn-dyslexia" onclick="toggleDyslexia()" title="Switch to OpenDyslexic font">𝐀 DYSLEXIC</button>
+      <button class="toggle-btn" id="btn-dyslexia" onclick="toggleDyslexia()" title="Superpower mode — dyslexia-friendly font with extra spacing">⚡ SUPERPOWER</button>
     </div>
     <button class="new-btn" onclick="newGame()">⟳ NEW GAME</button>
   </div>
@@ -467,7 +467,8 @@ function applyAll() {
   const lb = document.getElementById('btn-light');
   const db = document.getElementById('btn-dyslexia');
   if(lb) lb.classList.toggle('active-light', isLight);
-  if(db) db.classList.toggle('active-dyslexia', isDyslexia);
+  if(db) db.classList.toggle('active-super', isDyslexia);
+  if(db) db.textContent = isDyslexia ? '⚡ SUPERPOWER ON' : '⚡ SUPERPOWER';
   document.body.classList.remove('filter-blue','filter-green');
   const bb = document.getElementById('btn-blue');
   const gb = document.getElementById('btn-green');
